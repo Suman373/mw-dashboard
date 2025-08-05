@@ -1,3 +1,4 @@
+import type { DataSource } from "./datasource";
 import type { PolygonData } from "./polygon";
 
 
@@ -6,4 +7,5 @@ export interface DashboardState  {
     formattedRange: [string, string],
     selectedDays: number,
     polygons: PolygonData[],
+    dataSources: DataSource[]
 }

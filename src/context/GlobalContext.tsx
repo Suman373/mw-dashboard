@@ -6,6 +6,12 @@ const defaultState: DashboardState = {
     formattedRange: ["", ""],
     selectedDays: 1,
     polygons: [],
+    dataSources: [
+        {
+            source: "temperature2d",
+            colorRules: []
+        }
+    ]
 }
 
 const GlobalContext = createContext<{

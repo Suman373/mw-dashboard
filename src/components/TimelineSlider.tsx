@@ -32,7 +32,6 @@ const TimelineSlider = () => {
   return (
     <div className="px-4 py-2 bg-gray-800 rounded overflow-x-hidden">
       <div className="relative my-4 h-10">
-        <p>{state.range[0]} {state.range[1]}</p>
         <Range
           min={0}
           max={TOTAL_HOURS}
