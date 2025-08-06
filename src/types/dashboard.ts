@@ -7,5 +7,6 @@ export interface DashboardState  {
     formattedRange: [string, string],
     selectedDays: number,
     polygons: PolygonData[],
-    dataSources: DataSource[]
+    dataSources: DataSource[],
+    avgTemp: number
 }

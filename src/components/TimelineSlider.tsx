@@ -52,7 +52,7 @@ const TimelineSlider = () => {
               {children}
             </div>
           )}
-          renderThumb={({ props, index }) => {
+          renderThumb={({ props }) => {
             const { key: itemKey, ...otherProps } = props;
             return (
               <div
