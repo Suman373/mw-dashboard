@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
-import L, { LatLng, latLng, Polygon as LeafletPolygon, type LatLngTuple } from 'leaflet';
+import L, { LatLng, Polygon as LeafletPolygon } from 'leaflet';
 import 'leaflet-draw';
 import { useGlobalContext } from "../context/GlobalContext";
 

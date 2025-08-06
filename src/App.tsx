@@ -23,7 +23,6 @@ function App() {
   const [condition, setCondition] = useState<string>("");
   const [condValid, setCondValid] = useState<boolean>(false);
   const { toasts } = useToasterStore();
-  const [avgTemperature, setAvgTemperature] = useState(0);
 
 
   // calculate time period and selected days

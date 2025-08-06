@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { DEFAULT_LAT, DEFAULT_LONG } from '../utils/constants';
 import 'leaflet-draw/dist/leaflet.draw.css';
