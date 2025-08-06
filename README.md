@@ -4,7 +4,7 @@
 
 ### Setup and Run instructions
 
- Getting started with project normally
+ Getting started with project locally
    - Fork the repository
    - Clone your fork in your local machine `git clone <url>.git`
    - Run `npm install`
