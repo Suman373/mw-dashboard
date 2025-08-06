@@ -12,6 +12,8 @@ import { COLOR_RULE_REGEX, MAX_TOASTS, TOTAL_HOURS } from './utils/constants';
 import StaticBadge from './components/StaticBadge';
 import { useGlobalContext } from './context/GlobalContext';
 import ColorPicker from './components/ColorPicker';
+import { calculatePolygonColoring } from './utils/polygons';
+
 
 function App() {
 
@@ -21,6 +23,7 @@ function App() {
   const [condition, setCondition] = useState<string>("");
   const [condValid, setCondValid] = useState<boolean>(false);
   const { toasts } = useToasterStore();
+  const [avgTemperature, setAvgTemperature] = useState(0);
 
 
   // calculate time period and selected days
@@ -95,13 +98,9 @@ function App() {
     toast.success("Rule deleted");
   }
 
-
-
   useEffect(() => {
     calculateTimePeriod();
   }, [state.range]);
-
-
 
   useEffect(() => {
     toasts
@@ -110,9 +109,23 @@ function App() {
       .forEach((t) => toast.dismiss(t.id));
   }, [toasts]);
 
+  console.log(state.polygons);
+
   useEffect(() => {
     setCondValid(COLOR_RULE_REGEX.test(condition));
-  }, [condition])
+  }, [condition]);
+
+  useEffect(() => {
+    const start = dayjs().subtract(TOTAL_HOURS - state.range[0], 'hour').format("YYYY-MM-DD").toString();
+    const end = dayjs().subtract(TOTAL_HOURS - state.range[1], 'hour').format("YYYY-MM-DD").toString();
+    console.log("Running polygon coloring");
+    const debounce = setTimeout(()=>{
+      calculatePolygonColoring(state.polygons, setState, [start,end], state.dataSources);
+    },1000);
+
+    return ()=> clearTimeout(debounce);
+  
+  }, [state.range]);
 
   return (
     <>
@@ -124,6 +137,7 @@ function App() {
           <div className='flex space-x-4 gap-1 items-center justify-start'>
             <h1 className="text-lg md:text-xl font-semibold flex items-center space-x-4 gap-3"> <Calendar className='text-green-500' /> Time Period</h1>
             <p>{state.formattedRange[0]} - {state.formattedRange[1]}</p> <StaticBadge text={`${state.selectedDays} days`} />
+            <StaticBadge text={`Avg Temperature  - ${state.avgTemp.toFixed(2)}`} />
           </div>
           <TimelineSlider />
           <div>

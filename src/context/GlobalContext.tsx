@@ -8,10 +8,11 @@ const defaultState: DashboardState = {
     polygons: [],
     dataSources: [
         {
-            source: "temperature2d",
+            source: "temperature_2m",
             colorRules: []
         }
-    ]
+    ],
+    avgTemp: 0
 }
 
 const GlobalContext = createContext<{
@@ -28,7 +29,6 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [state, setState] = useState<DashboardState>(defaultState);
 
     const updateState = (key: string, value: any, parentKey: keyof DashboardState | null  = null) => {
-        console.log("key val",key,value);
         setState((prev) => {
             if (!parentKey) {
                 return {

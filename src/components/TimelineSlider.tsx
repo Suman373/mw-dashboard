@@ -20,7 +20,6 @@ const TimelineSlider = () => {
   const handleSliderChange = (vals: number[]) => {
     const start = vals[0];
     const end = vals[1];
-    console.log(start,end);
     if (end - start < MIN_HOUR_GAP) {
       toast.error("Select minimum 1 day range");
       return;

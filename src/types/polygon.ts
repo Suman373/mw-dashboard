@@ -1,7 +1,8 @@
-import type { LatLngLiteral } from "leaflet"
+import type { LatLng } from "leaflet"
 
 export type PolygonData = {
     id: string,
-    coordinates: LatLngLiteral[],
-    dataSource : string
+    coordinates: LatLng[],
+    dataSource : string,
+    fillColor: string
 }

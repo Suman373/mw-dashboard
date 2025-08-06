@@ -1,22 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMap } from "react-leaflet";
-import L, { latLng } from 'leaflet';
+import L, { LatLng, latLng, Polygon as LeafletPolygon, type LatLngTuple } from 'leaflet';
 import 'leaflet-draw';
 import { useGlobalContext } from "../context/GlobalContext";
+
+const polygonLayerMap = new Map<string, LeafletPolygon>();
 
 const PolygonCreator = () => {
     const map = useMap();
 
-    const { setState } = useGlobalContext();
+    const { setState, state } = useGlobalContext();
+    const { polygons } = state;
+
+    const initializedRef = useRef(false);
 
     // polyon event handlers
-    const onPolygonCreate = (latLngs: L.LatLng[], id: string) => {
-        console.log("onPolygonCreate fired", id);
+    const onPolygonCreate = (latLngs: L.LatLng[], id: string, color: string) => {
         setState((prev) => ({
             ...prev,
-            polygons: [...prev.polygons, { id, coordinates: latLngs }]
+            polygons: [
+                ...prev.polygons,
+                {
+                    id,
+                    coordinates: latLngs,
+                    fillColor: color,
+                    dataSource: "temperature_2m"
+                }
+            ]
         }));
-    }
+    };
 
     const onPolygonDelete = (id: string) => {
         setState((prev) => ({
@@ -25,7 +37,7 @@ const PolygonCreator = () => {
         }));
     }
 
-    const onPolygonEdit = (latLngs: L.LatLng[], id: string)=>{
+    const onPolygonEdit = (latLngs: L.LatLng[], id: string) => {
         setState((prev) => ({
             ...prev,
             polygons: prev.polygons.map((poly) =>
@@ -33,6 +45,36 @@ const PolygonCreator = () => {
             ),
         }));
     }
+    useEffect(() => {
+        if (initializedRef.current) return;
+
+        polygons.forEach((polygonData) => {
+            const latlngs: LatLng[] = polygonData.coordinates;
+
+            const polygon = L.polygon(latlngs, {
+                fillColor: polygonData.fillColor,
+                fillOpacity: 0.5,
+                color: "#333",
+                weight: 2,
+            });
+
+            polygon.addTo(map);
+            polygonLayerMap.set(polygonData.id, polygon);
+        });
+
+        initializedRef.current = true;
+    }, [map, polygons]);
+
+    useEffect(() => {
+        polygons.forEach((polygonData) => {
+            const polygonLayer = polygonLayerMap.get(polygonData.id);
+            if (polygonLayer) {
+                polygonLayer.setStyle({
+                    fillColor: polygonData.fillColor,
+                });
+            }
+        });
+    }, [polygons]);
 
     useEffect(() => {
         const drawnPolygons = new L.FeatureGroup();
@@ -72,15 +114,16 @@ const PolygonCreator = () => {
             const { layerType, layer } = e;
             if (layerType === "polygon") {
                 const latlngs: L.LatLng[] = layer.getLatLngs()[0];
-
                 if (latlngs.length < 3) {
                     alert('Polygon must have at least 3 points.');
                     return;
                 }
                 const id = L.Util.stamp(layer).toString();
                 drawnPolygons.addLayer(layer);
+                polygonLayerMap.set(id, layer); 
+
                 console.log("new poly created", latlngs, id);
-                onPolygonCreate(latlngs, id);
+                onPolygonCreate(latlngs, id, "#ffff");
             }
         });
 
